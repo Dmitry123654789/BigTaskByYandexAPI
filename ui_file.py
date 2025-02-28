@@ -20,7 +20,20 @@ class Ui_MainWindow(object):
         self.label_map = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_map.setText("")
         self.label_map.setObjectName("label_map")
-        self.gridLayout.addWidget(self.label_map, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_map, 2, 0, 1, 1)
+        self.radioButton_dark = QtWidgets.QRadioButton(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.radioButton_dark.setFont(font)
+        self.radioButton_dark.setObjectName("radioButton_dark")
+        self.gridLayout.addWidget(self.radioButton_dark, 0, 0, 1, 1)
+        self.radioButton_light = QtWidgets.QRadioButton(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.radioButton_light.setFont(font)
+        self.radioButton_light.setChecked(True)
+        self.radioButton_light.setObjectName("radioButton_light")
+        self.gridLayout.addWidget(self.radioButton_light, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -29,3 +42,5 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.radioButton_dark.setText(_translate("MainWindow", "Темная"))
+        self.radioButton_light.setText(_translate("MainWindow", "Светлая"))

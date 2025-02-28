@@ -15,6 +15,17 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.map_ll = [37.530898, 55.702892]
         self.z = 5
+        self.theme = 'light'
+        self.draw_map()
+        self.radioButton_dark.clicked.connect(self.set_dark)
+        self.radioButton_light.clicked.connect(self.set_light)
+
+    def set_dark(self):
+        self.theme = 'dark'
+        self.draw_map()
+
+    def set_light(self):
+        self.theme = 'light'
         self.draw_map()
 
     def keyPressEvent(self, event):
@@ -33,7 +44,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.draw_map()
 
     def draw_map(self):
-        response = get_response_map(','.join(map(str, self.map_ll)), self.z)
+        response = get_response_map(','.join(map(str, self.map_ll)), self.z, self.theme)
         if response:
             map_file = "map.png"
             with open(map_file, "wb") as file:

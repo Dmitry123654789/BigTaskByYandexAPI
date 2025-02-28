@@ -4,13 +4,14 @@ from requests.adapters import HTTPAdapter
 import requests
 
 
-def get_response_map(ll, z):
+def get_response_map(ll, z, theme):
     server_address = "https://static-maps.yandex.ru/v1"
     apikey = '0eea7a3e-806e-4b45-8976-3c543752e89c'
     map_params = {
         'll': ll,
         'apikey': apikey,
-        'z': z
+        'z': z,
+        'theme': theme
     }
     session = requests.Session()
     retry = Retry(total=10, connect=5, backoff_factor=0.5)
