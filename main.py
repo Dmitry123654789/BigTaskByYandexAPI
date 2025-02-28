@@ -20,22 +20,17 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_PageDown:
             self.z = max(self.z - 1, 0)
-            self.draw_map()
         if event.key() == Qt.Key.Key_PageUp:
             self.z = min(self.z + 1, 21)
-            self.draw_map()
-    #     if event.key() == Qt.Key.Key_Up:
-    #         self.map_ll[1] += 20 // self.z
-    #         self.draw_map()
-    #     if event.key() == Qt.Key.Key_Down:
-    #         self.map_ll[1] -= 20 // self.z
-    #         self.draw_map()
-    #     if event.key() == Qt.Key.Key_Right:
-    #         self.map_ll[0] += 20 // self.z
-    #         self.draw_map()
-    #     if event.key() == Qt.Key.Key_Left:
-    #         self.map_ll[0] -= 20 // self.z
-    #         self.draw_map()
+        if event.key() == Qt.Key.Key_Up:
+            self.map_ll[1] += 18 // self.z
+        if event.key() == Qt.Key.Key_Down:
+            self.map_ll[1] -= 18 // self.z
+        if event.key() == Qt.Key.Key_Right:
+            self.map_ll[0] += 18 // self.z
+        if event.key() == Qt.Key.Key_Left:
+            self.map_ll[0] -= 18 // self.z
+        self.draw_map()
 
     def draw_map(self):
         response = get_response_map(','.join(map(str, self.map_ll)), self.z)
