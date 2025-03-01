@@ -26,6 +26,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
 
     def del_searh_obj(self):
+        self.label_adress.setText('Адрес:')
         answer = get_point(self.lineEdit_searh.text())
         if answer:
             result = ','.join(map(str, self.map_ll))
@@ -39,6 +40,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         if answer:
             self.map_ll = list(map(float, answer['Point']['pos'].split()))
             self.points.add(','.join(map(str, self.map_ll)))
+            self.label_adress.setText(
+                'Адрес: ' + answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine'])
             self.draw_map()
 
     def set_dark(self):
