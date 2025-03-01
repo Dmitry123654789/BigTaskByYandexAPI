@@ -23,13 +23,23 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.radioButton_dark.clicked.connect(self.set_dark)
         self.radioButton_light.clicked.connect(self.set_light)
         self.pushButton_searh.clicked.connect(self.searh)
+        self.pushButton_del_point.clicked.connect(self.del_searh_obj)
+
+    def del_searh_obj(self):
+        answer = get_point(self.lineEdit_searh.text())
+        if answer:
+            result = ','.join(map(str, self.map_ll))
+            if result in self.points:
+                self.points.remove(result)
+                self.draw_map()
+
 
     def searh(self):
         answer = get_point(self.lineEdit_searh.text())
         if answer:
             self.map_ll = list(map(float, answer['Point']['pos'].split()))
             self.points.add(','.join(map(str, self.map_ll)))
-            self.draw_map(','.join(map(str, self.map_ll)))
+            self.draw_map()
 
     def set_dark(self):
         self.theme = 'dark'
@@ -57,8 +67,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         else:
             self.draw_map()
 
-    def draw_map(self, *pt):
-        response = get_response_map(','.join(map(str, self.map_ll)), self.z, self.theme, pt)
+    def draw_map(self):
+        response = get_response_map(','.join(map(str, self.map_ll)), self.z, self.theme, self.points)
         if response:
             map_file = "map.png"
             with open(map_file, "wb") as file:

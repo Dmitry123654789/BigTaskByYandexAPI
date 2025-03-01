@@ -26,6 +26,9 @@ class Ui_MainWindow(object):
         self.pushButton_searh = QtWidgets.QPushButton(parent=self.centralwidget)
         self.pushButton_searh.setObjectName("pushButton_searh")
         self.horizontalLayout.addWidget(self.pushButton_searh)
+        self.pushButton_del_point = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.pushButton_del_point.setObjectName("pushButton_del_point")
+        self.horizontalLayout.addWidget(self.pushButton_del_point)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(-1, 0, -1, 0)
         self.verticalLayout.setSpacing(6)
@@ -64,5 +67,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_searh.setText(_translate("MainWindow", "Искать"))
+        self.pushButton_del_point.setText(_translate("MainWindow", "Сброс поискового результата"))
         self.radioButton_light.setText(_translate("MainWindow", "Светлая"))
         self.radioButton_dark.setText(_translate("MainWindow", "Темная"))
