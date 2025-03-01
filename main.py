@@ -29,7 +29,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         if answer:
             self.map_ll = list(map(float, answer['Point']['pos'].split()))
             self.points.add(','.join(map(str, self.map_ll)))
-            self.draw_map()
+            self.draw_map(','.join(map(str, self.map_ll)))
 
     def set_dark(self):
         self.theme = 'dark'
@@ -54,10 +54,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.map_ll[0] -= 18 // self.z
         if event.key() == Qt.Key.Key_Return:
             self.searh()
-        self.draw_map()
+        else:
+            self.draw_map()
 
-    def draw_map(self):
-        response = get_response_map(','.join(map(str, self.map_ll)), self.z, self.theme, self.points)
+    def draw_map(self, *pt):
+        response = get_response_map(','.join(map(str, self.map_ll)), self.z, self.theme, pt)
         if response:
             map_file = "map.png"
             with open(map_file, "wb") as file:
