@@ -6,9 +6,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from ui_file import Ui_MainWindow
-from utilits import get_response_map, get_point
-
-
+from utilits import get_response_map, get_json
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -27,21 +25,24 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def del_searh_obj(self):
         self.label_adress.setText('Адрес:')
-        answer = get_point(self.lineEdit_searh.text())
+        answer = get_json(self.lineEdit_searh.text())
         if answer:
             result = ','.join(map(str, self.map_ll))
             if result in self.points:
                 self.points.remove(result)
                 self.draw_map()
 
-
     def searh(self):
-        answer = get_point(self.lineEdit_searh.text())
+        answer = get_json(self.lineEdit_searh.text())
         if answer:
             self.map_ll = list(map(float, answer['Point']['pos'].split()))
             self.points.add(','.join(map(str, self.map_ll)))
             self.label_adress.setText(
                 'Адрес: ' + answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine'])
+            if 'postal_code' in answer["metaDataProperty"]["GeocoderMetaData"][
+                "Address"] and self.checkBox_postIndex.isChecked():
+                self.label_adress.setText(self.label_adress.text() + '\nПочтовый индекс: ' +
+                                          answer["metaDataProperty"]["GeocoderMetaData"]["Address"]['postal_code'])
             self.draw_map()
 
     def set_dark(self):

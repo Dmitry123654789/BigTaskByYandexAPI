@@ -1,7 +1,8 @@
 import sys
-from urllib3 import Retry
-from requests.adapters import HTTPAdapter
+
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 
 def get_response_map(ll, z, theme, *pt):
@@ -24,13 +25,14 @@ def get_response_map(ll, z, theme, *pt):
         sys.exit(1)
     return response.content
 
-def get_point(adress):
-    server_address = "http://geocode-maps.yandex.ru/1.x/"
-    geocoder_params = {
-        "apikey": "8013b162-6b42-4997-9691-77b7074026e0",
-        "format": "json",
-        "geocode": adress}
-    response = requests.get(server_address, params=geocoder_params)
-    if not response:
+
+def get_json(adress):
+    api_key = '8013b162-6b42-4997-9691-77b7074026e0'
+    server_address = 'https://geocode-maps.yandex.ru/1.x/?'
+    geocoder_request = f'{server_address}apikey={api_key}&geocode={adress}&format=json'
+    response = requests.get(geocoder_request)
+    if response:
+        content = response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']
+        return content
+    else:
         return None
-    return response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']

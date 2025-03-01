@@ -18,18 +18,18 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="leftMargin">
-       <number>31</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>18</number>
+       <number>0</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="leftMargin">
-         <number>29</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QLineEdit" name="lineEdit_searh"/>
@@ -111,6 +111,13 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox_postIndex">
+            <property name="text">
+             <string>Включить почтовый индекс</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
