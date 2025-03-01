@@ -25,7 +25,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.radioButton_light.clicked.connect(self.set_light)
         self.pushButton_searh.clicked.connect(self.searh)
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
-    #   self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
+        self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
 
     def show_text_adress(self):
         if self.checkBox_postIndex.isChecked():
