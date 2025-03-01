@@ -32,7 +32,9 @@ def get_json(adress):
     geocoder_request = f'{server_address}apikey={api_key}&geocode={adress}&format=json'
     response = requests.get(geocoder_request)
     if response:
-        content = response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']
-        return content
+        content = response.json()['response']['GeoObjectCollection']['featureMember']
+        if len(content) == 0:
+            return None
+        return content[0]['GeoObject']
     else:
         return None

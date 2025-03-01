@@ -13,37 +13,52 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.map_ll = [37.530898, 55.702892]
+        self.map_ll = [37.617698, 55.755864]
         self.z = 5
         self.theme = 'light'
         self.points = set()
+        self.adress = 'Москва'
+        self.post_index = 'отсутствует'
+        self.show_text_adress()
         self.draw_map()
         self.radioButton_dark.clicked.connect(self.set_dark)
         self.radioButton_light.clicked.connect(self.set_light)
         self.pushButton_searh.clicked.connect(self.searh)
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
+    #   self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
+
+    def show_text_adress(self):
+        if self.checkBox_postIndex.isChecked():
+            self.label_adress.setText('Адрес: ' + self.adress + '\nПочтовый индекс: ' + self.post_index)
+        else:
+            self.label_adress.setText('Адрес: ' + self.adress)
 
     def del_searh_obj(self):
-        self.label_adress.setText('Адрес:')
         answer = get_json(self.lineEdit_searh.text())
         if answer:
             result = ','.join(map(str, self.map_ll))
             if result in self.points:
                 self.points.remove(result)
                 self.draw_map()
+            self.post_index = self.adress = ''
+        self.show_text_adress()
 
     def searh(self):
         answer = get_json(self.lineEdit_searh.text())
         if answer:
             self.map_ll = list(map(float, answer['Point']['pos'].split()))
             self.points.add(','.join(map(str, self.map_ll)))
-            self.label_adress.setText(
-                'Адрес: ' + answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine'])
-            if 'postal_code' in answer["metaDataProperty"]["GeocoderMetaData"][
-                "Address"] and self.checkBox_postIndex.isChecked():
-                self.label_adress.setText(self.label_adress.text() + '\nПочтовый индекс: ' +
-                                          answer["metaDataProperty"]["GeocoderMetaData"]["Address"]['postal_code'])
+            self.adress = answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine']
+            adress = answer["metaDataProperty"]["GeocoderMetaData"]["Address"]
+            if 'postal_code' in adress:
+                self.post_index = str(adress['postal_code'])
+            else:
+                self.post_index = 'отсутствует'
             self.draw_map()
+        else:
+            self.adress = 'ничего не найдено'
+            self.post_index = 'отсутствует'
+        self.show_text_adress()
 
     def set_dark(self):
         self.theme = 'dark'
