@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 
@@ -6,7 +7,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from ui_file import Ui_MainWindow
-from utilits import get_response_map, get_json
+from utilits import get_response_map, get_json, lonlat_distance
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -14,11 +15,12 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.map_ll = [37.617698, 55.755864]
-        self.z = 5
+        self.z = 18
         self.theme = 'light'
         self.points = set()
         self.adress = 'Москва'
         self.post_index = 'отсутствует'
+        self.min_scale = 5
         self.show_text_adress()
         self.draw_map()
         self.radioButton_dark.clicked.connect(self.set_dark)
@@ -26,6 +28,32 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_searh.clicked.connect(self.searh)
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
         self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
+
+    def click_map(self, x, y):
+        x, y = x - self.label_map.pos().x(), y - self.label_map.pos().y()
+        if all([self.label_map.width() >= x > 0, self.label_map.height() >= y >= 0]):
+            x, y = -(self.label_map.width() // 2 - x), -(self.label_map.height() // 2 - y)
+            scale = 2 ** (21 - self.z + 1 - 1) * self.min_scale / 100
+            print(math.cos(math.radians(self.map_ll[1])))
+            print(math.cos(self.map_ll[1]))
+            new_point = scale * abs(y) / 111320, scale * abs(x) / 111320 * (math.cos(math.radians(self.map_ll[1]))) # !!!!!!!!!!!!!!!!!!!!!!!
+            print(new_point)
+            a = 3
+            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[0], self.map_ll[1] + new_point[1]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[0], self.map_ll[1] - new_point[1]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[0], self.map_ll[1] - new_point[1]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[0], self.map_ll[1] + new_point[1]])))
+
+            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[1], self.map_ll[1] + new_point[0]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[1], self.map_ll[1] - new_point[0]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[1], self.map_ll[1] - new_point[0]])))
+            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[1], self.map_ll[1] + new_point[0]])))
+            self.draw_map()
+            print(self.map_ll)
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
+            self.click_map(e.pos().x(), e.pos().y())
 
     def show_text_adress(self):
         if self.checkBox_postIndex.isChecked():

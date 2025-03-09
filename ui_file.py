@@ -12,7 +12,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(649, 600)
+        MainWindow.setMinimumSize(QtCore.QSize(649, 600))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -66,6 +67,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.label_adress)
         self.verticalLayout_2.addLayout(self.verticalLayout_3)
         self.label_map = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_map.setMinimumSize(QtCore.QSize(256, 256))
+        self.label_map.setMaximumSize(QtCore.QSize(600, 450))
         self.label_map.setText("")
         self.label_map.setObjectName("label_map")
         self.verticalLayout_2.addWidget(self.label_map)
