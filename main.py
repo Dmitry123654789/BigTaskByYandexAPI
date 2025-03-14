@@ -1,13 +1,13 @@
-import math
 import os
 import sys
+from math import cos, radians
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from ui_file import Ui_MainWindow
-from utilits import get_response_map, get_json, lonlat_distance
+from utilits import get_response_map, get_json
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -18,11 +18,13 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.z = 18
         self.theme = 'light'
         self.points = set()
-        self.adress = 'Москва'
+        self.adress = 'Россия, Москва'
         self.post_index = 'отсутствует'
-        self.min_scale = 5
+        self.set_connect_function()
         self.show_text_adress()
         self.draw_map()
+
+    def set_connect_function(self):
         self.radioButton_dark.clicked.connect(self.set_dark)
         self.radioButton_light.clicked.connect(self.set_light)
         self.pushButton_searh.clicked.connect(self.searh)
@@ -31,25 +33,24 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def click_map(self, x, y):
         x, y = x - self.label_map.pos().x(), y - self.label_map.pos().y()
-        if all([self.label_map.width() >= x > 0, self.label_map.height() >= y >= 0]):
-            x, y = -(self.label_map.width() // 2 - x), -(self.label_map.height() // 2 - y)
-            scale = 2 ** (21 - self.z + 1 - 1) * self.min_scale / 100
-            print(math.cos(math.radians(self.map_ll[1])))
-            print(math.cos(self.map_ll[1]))
-            new_point = scale * abs(y) / 111320, scale * abs(x) / 111320 * (math.cos(math.radians(self.map_ll[1]))) # !!!!!!!!!!!!!!!!!!!!!!!
-            print(new_point)
-            a = 3
-            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[0], self.map_ll[1] + new_point[1]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[0], self.map_ll[1] - new_point[1]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[0], self.map_ll[1] - new_point[1]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[0], self.map_ll[1] + new_point[1]])))
+        if all([self.label_map.width() >= x >= 0, self.label_map.height() >= y >= 0]):
+            coord_to_geo_x, coord_to_geo_y = 0.0000428, 0.0000428
+            y = self.label_map.height() // 2 - y
+            x = x - self.label_map.width() // 2
 
-            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[1], self.map_ll[1] + new_point[0]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[1], self.map_ll[1] - new_point[0]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] + new_point[1], self.map_ll[1] - new_point[0]])))
-            self.points.add(','.join(map(str, [self.map_ll[0] - new_point[1], self.map_ll[1] + new_point[0]])))
-            self.draw_map()
-            print(self.map_ll)
+            ly = (float(self.map_ll[0]) + x * coord_to_geo_x * 2 ** (15 - self.z))
+            lx = float(self.map_ll[1]) + y * coord_to_geo_y * cos(radians(float(self.map_ll[1]))) * 2 ** (15 - self.z)
+            if ly > 180:
+                ly -= 360
+            elif ly < -180:
+                ly += 360
+
+
+            if not (lx > 90 or lx < -90):
+                self.lineEdit_searh.setText(f'{ly},{lx}')
+                self.searh(coord=f'{ly},{lx}')
+                self.draw_map()
+                self.lineEdit_searh.setText('')
 
     def mousePressEvent(self, e):
         if e.button() == Qt.MouseButton.LeftButton:
@@ -71,11 +72,14 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.post_index = self.adress = ''
         self.show_text_adress()
 
-    def searh(self):
+    def searh(self, coord=None):
         answer = get_json(self.lineEdit_searh.text())
         if answer:
-            self.map_ll = list(map(float, answer['Point']['pos'].split()))
-            self.points.add(','.join(map(str, self.map_ll)))
+            if coord  is None:
+                self.map_ll = list(map(float, answer['Point']['pos'].split()))
+                self.points.add(','.join(map(str, self.map_ll)))
+            else:
+                self.points.add(coord)
             self.adress = answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine']
             adress = answer["metaDataProperty"]["GeocoderMetaData"]["Address"]
             if 'postal_code' in adress:

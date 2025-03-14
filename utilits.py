@@ -15,7 +15,9 @@ def get_response_map(ll, z, theme, *pt):
         'z': z,
         'theme': theme,
         'pt': '~'.join(list(*pt)),
-        'size': '600,450'
+        'size': '600,380',
+        # 'x' : 1000,
+        # 'y' : 1000
     }
     session = requests.Session()
     retry = Retry(total=10, connect=5, backoff_factor=0.5)
