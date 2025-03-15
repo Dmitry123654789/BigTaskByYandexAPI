@@ -7,7 +7,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from ui_file import Ui_MainWindow
-from utilits import get_response_map, get_json
+from utilits import get_response_map, get_json, get_organisation_json, lonlat_distance
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -31,30 +31,63 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
         self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
 
-    def click_map(self, x, y):
+    def found_coord(self, x, y):
+        coord_to_geo_x, coord_to_geo_y = 0.0000428, 0.0000428  # Отношение пиксельной сетки к геогорафической сетке
+        y = self.label_map.height() // 2 - y
+        x = x - self.label_map.width() // 2
+
+        ly = (float(self.map_ll[0]) + x * coord_to_geo_x * 2 ** (15 - self.z))
+        lx = float(self.map_ll[1]) + y * coord_to_geo_y * cos(radians(float(self.map_ll[1]))) * 2 ** (15 - self.z)
+        if ly > 180:
+            ly -= 360
+        elif ly < -180:
+            ly += 360
+        return lx, ly
+
+    def click_map_left(self, x, y):
         x, y = x - self.label_map.pos().x(), y - self.label_map.pos().y()
         if all([self.label_map.width() >= x >= 0, self.label_map.height() >= y >= 0]):
-            coord_to_geo_x, coord_to_geo_y = 0.0000428, 0.0000428
-            y = self.label_map.height() // 2 - y
-            x = x - self.label_map.width() // 2
-
-            ly = (float(self.map_ll[0]) + x * coord_to_geo_x * 2 ** (15 - self.z))
-            lx = float(self.map_ll[1]) + y * coord_to_geo_y * cos(radians(float(self.map_ll[1]))) * 2 ** (15 - self.z)
-            if ly > 180:
-                ly -= 360
-            elif ly < -180:
-                ly += 360
-
-
+            lx, ly = self.found_coord(x, y)
             if not (lx > 90 or lx < -90):
                 self.lineEdit_searh.setText(f'{ly},{lx}')
-                self.searh(coord=f'{ly},{lx}')
-                self.draw_map()
+                self.searh(coord=[ly, lx], color_pt='pm2rdm')
                 self.lineEdit_searh.setText('')
+            else:
+                self.points = set()
+        self.draw_map()
+
+    def click_map_right(self, x, y):
+        x, y = x - self.label_map.pos().x(), y - self.label_map.pos().y()
+        if all([self.label_map.width() >= x >= 0, self.label_map.height() >= y >= 0]):
+            lx, ly = self.found_coord(x, y)
+            if not (lx > 90 or lx < -90):
+                res = get_organisation_json(f'{ly},{lx}', self.lineEdit_oraganization.text())
+                if not res is None:
+                    for x in res:
+                        coord_organization = x["geometry"]["coordinates"]
+                        if lonlat_distance(coord_organization, (ly, lx)) <= 50:
+                            self.lineEdit_searh.setText(x['properties']['description'])
+                            self.searh(coord=coord_organization, color_pt='pm2am')
+                            self.lineEdit_searh.setText('')
+                            break
+                    else:
+                        self.del_info_organization()
+                else:
+                    self.del_info_organization()
+        self.show_text_adress()
+        self.draw_map()
+
+    def del_info_organization(self):
+        self.points = set()
+        self.adress = f'Нет \"{self.lineEdit_oraganization.text()}\" в радиусе 50 метров'
+        self.post_index = ''
+
 
     def mousePressEvent(self, e):
         if e.button() == Qt.MouseButton.LeftButton:
-            self.click_map(e.pos().x(), e.pos().y())
+            self.click_map_left(e.pos().x(), e.pos().y())
+        elif e.button() == Qt.MouseButton.RightButton:
+            self.click_map_right(e.pos().x(), e.pos().y())
 
     def show_text_adress(self):
         if self.checkBox_postIndex.isChecked():
@@ -70,17 +103,28 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 self.points.remove(result)
                 self.draw_map()
             self.post_index = self.adress = ''
+        self.lineEdit_searh.setText('')
+        self.lineEdit_oraganization.setText('')
         self.show_text_adress()
 
-    def searh(self, coord=None):
+    def searh(self, coord=None, color_pt=''):
         answer = get_json(self.lineEdit_searh.text())
         if answer:
-            if coord  is None:
-                self.map_ll = list(map(float, answer['Point']['pos'].split()))
-                self.points.add(','.join(map(str, self.map_ll)))
+            self.points = set()
+            formate_coord = list(map(float, answer['Point']['pos'].split()))
+            if coord is None or type(coord) is bool:
+                self.map_ll = formate_coord
             else:
-                self.points.add(coord)
-            self.adress = answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine']
+                formate_coord = coord
+            if color_pt != '':
+                self.points.add(','.join(map(str, formate_coord)) + ',' + color_pt)
+            else:
+                self.points.add(','.join(map(str, formate_coord)))
+
+            try:
+                self.adress = answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine']
+            except KeyError:
+                self.adress = answer['metaDataProperty']['GeocoderMetaData']['AddressDetails']["Address"]
             adress = answer["metaDataProperty"]["GeocoderMetaData"]["Address"]
             if 'postal_code' in adress:
                 self.post_index = str(adress['postal_code'])

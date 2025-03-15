@@ -12,37 +12,76 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 700)
-        MainWindow.setMinimumSize(QtCore.QSize(800, 700))
-        MainWindow.setMaximumSize(QtCore.QSize(800, 700))
+        MainWindow.resize(800, 800)
+        MainWindow.setMinimumSize(QtCore.QSize(800, 800))
+        MainWindow.setMaximumSize(QtCore.QSize(800, 800))
+        MainWindow.setStyleSheet("QMainWindow{\n"
+"    color: rgb(3, 3, 3);\n"
+"    border: 3px solid rgb(126, 126, 126);\n"
+"}")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout_2.setContentsMargins(-1, 0, -1, -1)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setContentsMargins(0, -1, 0, 0)
+        self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setContentsMargins(0, -1, -1, -1)
+        self.horizontalLayout_2.setSpacing(6)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label_2 = QtWidgets.QLabel(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout_2.addWidget(self.label_2)
         self.lineEdit_searh = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.lineEdit_searh.setObjectName("lineEdit_searh")
         self.horizontalLayout_2.addWidget(self.lineEdit_searh)
         self.pushButton_searh = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.pushButton_searh.setMinimumSize(QtCore.QSize(60, 0))
+        self.pushButton_searh.setStyleSheet("QPushButton{\n"
+"    background-color: rgb(227, 227, 227);\n"
+"    color: rgb(3, 3, 3);\n"
+"    border: 2px solid rgb(126, 126, 126);\n"
+"    border-radius: 2px\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: #4CAF50;\n"
+"    color: rgb(255, 255, 255);\n"
+"}")
         self.pushButton_searh.setObjectName("pushButton_searh")
         self.horizontalLayout_2.addWidget(self.pushButton_searh)
         self.pushButton_del_point = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.pushButton_del_point.setMinimumSize(QtCore.QSize(175, 0))
+        self.pushButton_del_point.setStyleSheet("QPushButton{\n"
+"    background-color: rgb(227, 227, 227);\n"
+"    color: rgb(3, 3, 3);\n"
+"    border: 2px solid rgb(126, 126, 126);\n"
+"    border-radius: 2px\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: #4CAF50;\n"
+"    color: rgb(255, 255, 255);\n"
+"}")
         self.pushButton_del_point.setObjectName("pushButton_del_point")
         self.horizontalLayout_2.addWidget(self.pushButton_del_point)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(-1, 0, -1, 0)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName("verticalLayout")
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout.addItem(spacerItem)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout.addItem(spacerItem1)
         self.radioButton_light = QtWidgets.QRadioButton(parent=self.centralwidget)
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(13)
         self.radioButton_light.setFont(font)
         self.radioButton_light.setChecked(True)
         self.radioButton_light.setObjectName("radioButton_light")
@@ -53,43 +92,77 @@ class Ui_MainWindow(object):
         self.radioButton_dark.setFont(font)
         self.radioButton_dark.setObjectName("radioButton_dark")
         self.verticalLayout.addWidget(self.radioButton_dark)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout.addItem(spacerItem1)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout.addItem(spacerItem2)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setContentsMargins(-1, 0, -1, -1)
+        self.horizontalLayout_4.setSpacing(0)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.label = QtWidgets.QLabel(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.horizontalLayout_4.addWidget(self.label)
+        self.lineEdit_oraganization = QtWidgets.QLineEdit(parent=self.centralwidget)
+        self.lineEdit_oraganization.setStyleSheet("QLineEditl{\n"
+"    color: rgb(3, 3, 3);\n"
+"    border: 10px solid rgb(126, 126, 126);\n"
+"}")
+        self.lineEdit_oraganization.setObjectName("lineEdit_oraganization")
+        self.horizontalLayout_4.addWidget(self.lineEdit_oraganization)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_4)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setContentsMargins(-1, -1, -1, 0)
         self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_adress = QtWidgets.QLabel(parent=self.centralwidget)
         font = QtGui.QFont()
-        font.setPointSize(13)
+        font.setPointSize(15)
         self.label_adress.setFont(font)
         self.label_adress.setWordWrap(True)
         self.label_adress.setObjectName("label_adress")
         self.horizontalLayout_3.addWidget(self.label_adress)
         self.checkBox_postIndex = QtWidgets.QCheckBox(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.checkBox_postIndex.setFont(font)
         self.checkBox_postIndex.setObjectName("checkBox_postIndex")
         self.horizontalLayout_3.addWidget(self.checkBox_postIndex)
         self.horizontalLayout_3.setStretch(0, 1000)
         self.horizontalLayout_3.setStretch(1, 1)
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         self.verticalLayout_2.addLayout(self.verticalLayout_3)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout_2.addItem(spacerItem3)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setContentsMargins(-1, -1, -1, 0)
+        self.horizontalLayout.setContentsMargins(-1, 0, -1, 0)
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout.addItem(spacerItem2)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout.addItem(spacerItem4)
         self.label_map = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label_map.setMinimumSize(QtCore.QSize(600, 450))
-        self.label_map.setMaximumSize(QtCore.QSize(600, 450))
+        self.label_map.setMinimumSize(QtCore.QSize(600, 380))
+        self.label_map.setMaximumSize(QtCore.QSize(600, 380))
+        self.label_map.setStyleSheet("QLabel{\n"
+"    color: rgb(3, 3, 3);\n"
+"    border: 3px solid rgb(126, 126, 126);\n"
+"}")
         self.label_map.setText("")
         self.label_map.setObjectName("label_map")
         self.horizontalLayout.addWidget(self.label_map)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout.addItem(spacerItem3)
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout.addItem(spacerItem5)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
+        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout_2.addItem(spacerItem6)
+        self.verticalLayout_2.setStretch(0, 1)
+        self.verticalLayout_2.setStretch(1, 1)
+        self.verticalLayout_2.setStretch(2, 100)
+        self.verticalLayout_2.setStretch(3, 10000)
+        self.verticalLayout_2.setStretch(4, 100)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -98,9 +171,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label_2.setText(_translate("MainWindow", "Адрес:  "))
         self.pushButton_searh.setText(_translate("MainWindow", "Искать"))
         self.pushButton_del_point.setText(_translate("MainWindow", "Сброс поискового результата"))
         self.radioButton_light.setText(_translate("MainWindow", "Светлая"))
         self.radioButton_dark.setText(_translate("MainWindow", "Темная"))
+        self.label.setText(_translate("MainWindow", "Организация:  "))
         self.label_adress.setText(_translate("MainWindow", "Адрес:"))
         self.checkBox_postIndex.setText(_translate("MainWindow", "Включить почтовый индекс"))
