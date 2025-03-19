@@ -103,9 +103,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 self.points.remove(result)
                 self.draw_map()
             self.post_index = self.adress = ''
+        self.points = set()
         self.lineEdit_searh.setText('')
         self.lineEdit_oraganization.setText('')
         self.show_text_adress()
+        self.draw_map()
 
     def searh(self, coord=None, color_pt=''):
         answer = get_json(self.lineEdit_searh.text())
