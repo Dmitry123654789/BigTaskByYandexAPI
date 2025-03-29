@@ -50,7 +50,7 @@
      </spacer>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0">
+     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -203,38 +203,6 @@ QPushButton:hover{
            </spacer>
           </item>
          </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Организация:  </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_oraganization">
-          <property name="styleSheet">
-           <string notr="true">QLineEditl{
-	color: rgb(3, 3, 3);
-	border: 10px solid rgb(126, 126, 126);
-}</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>

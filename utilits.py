@@ -6,8 +6,6 @@ from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
 def get_organisation_json(ll, organization):
-    if not organization:
-        organization = 'аптеки'
     server_adress = 'https://search-maps.yandex.ru/v1'
     api_key = 'dda3ddba-c9ea-4ead-9010-f43fbc15c6e3'
     map_params = {
@@ -15,8 +13,9 @@ def get_organisation_json(ll, organization):
         "lang": "ru_RU",
         'apikey': api_key,
         "type": "biz",
-        "results": 25,
-        "ll": ll
+        "results": 1,
+        "ll": ll,
+        "spn": '0.0005,0.0005'
     }
     session = requests.Session()
     retry = Retry(total=10, connect=5, backoff_factor=0.5)
@@ -24,7 +23,7 @@ def get_organisation_json(ll, organization):
     session.mount('https://', adapter)
     response = requests.get(server_adress, params=map_params)
     if not response:
-        return None
+        return []
     return response.json()["features"]
 
 def get_response_map(ll, z, theme, *pt):

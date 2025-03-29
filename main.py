@@ -61,25 +61,33 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         if all([self.label_map.width() >= x >= 0, self.label_map.height() >= y >= 0]):
             lx, ly = self.found_coord(x, y)
             if not (lx > 90 or lx < -90):
-                res = get_organisation_json(f'{ly},{lx}', self.lineEdit_oraganization.text())
-                if not res is None:
-                    for x in res:
-                        coord_organization = x["geometry"]["coordinates"]
-                        if lonlat_distance(coord_organization, (ly, lx)) <= 50:
-                            self.lineEdit_searh.setText(x['properties']['description'])
-                            self.searh(coord=coord_organization, color_pt='pm2am')
-                            self.lineEdit_searh.setText('')
-                            break
-                    else:
-                        self.del_info_organization()
+                new_point = [50, None, '']
+
+                for orzaniz in open('organization.txt', encoding='utf-8').readlines():
+                    for place in get_organisation_json(f'{ly},{lx}', orzaniz.strip()):
+                        coord_organization = place["geometry"]["coordinates"]
+                        # print(orzaniz.strip(), lonlat_distance(coord_organization, (ly, lx)))
+                        if lonlat_distance(coord_organization, (ly, lx)) <= new_point[0]:
+                            print('dsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd')
+                            new_point = [lonlat_distance(coord_organization, (ly, lx)), place['properties']['description'], coord_organization]
+                print(new_point)
+                if not new_point[1] is None:
+                    print('yes')
+                    self.lineEdit_searh.setText(new_point[1])
+                    self.searh(coord=new_point[2], color_pt='pm2am')
+                    self.lineEdit_searh.setText('')
                 else:
                     self.del_info_organization()
+            else:
+                self.del_info_organization()
+
+
         self.show_text_adress()
         self.draw_map()
 
     def del_info_organization(self):
         self.points = set()
-        self.adress = f'Нет \"{self.lineEdit_oraganization.text()}\" в радиусе 50 метров'
+        self.adress = f'Нет организаций в радиусе 50 метров'
         self.post_index = ''
 
 
@@ -105,7 +113,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.post_index = self.adress = ''
         self.points = set()
         self.lineEdit_searh.setText('')
-        self.lineEdit_oraganization.setText('')
         self.show_text_adress()
         self.draw_map()
 
