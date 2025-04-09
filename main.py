@@ -6,8 +6,8 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
-from ui_file import Ui_MainWindow
-from utilits import get_response_map, get_json, get_organisation_json, lonlat_distance
+from ui.ui_file import Ui_MainWindow
+from utilits.utilits import get_response_map, get_json, get_organisation_json, lonlat_distance
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -20,6 +20,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.points = set()
         self.adress = 'Россия, Москва'
         self.post_index = 'отсутствует'
+        self.add_param_combobox()
         self.set_connect_function()
         self.show_text_adress()
         self.draw_map()
@@ -30,6 +31,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_searh.clicked.connect(self.searh)
         self.pushButton_del_point.clicked.connect(self.del_searh_obj)
         self.checkBox_postIndex.checkStateChanged.connect(self.show_text_adress)
+
+    def add_param_combobox(self):
+        with open('utilits/organization.txt', encoding='utf-8') as f:
+            self.comboBox.addItems([x.strip() for x in f.readlines()])
 
     def found_coord(self, x, y):
         coord_to_geo_x, coord_to_geo_y = 0.0000428, 0.0000428  # Отношение пиксельной сетки к геогорафической сетке
@@ -61,26 +66,20 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         if all([self.label_map.width() >= x >= 0, self.label_map.height() >= y >= 0]):
             lx, ly = self.found_coord(x, y)
             if not (lx > 90 or lx < -90):
-                new_point = [50, None, '']
-
-                for orzaniz in open('organization.txt', encoding='utf-8').readlines():
-                    for place in get_organisation_json(f'{ly},{lx}', orzaniz.strip()):
-                        coord_organization = place["geometry"]["coordinates"]
-                        # print(orzaniz.strip(), lonlat_distance(coord_organization, (ly, lx)))
-                        if lonlat_distance(coord_organization, (ly, lx)) <= new_point[0]:
-                            print('dsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd')
-                            new_point = [lonlat_distance(coord_organization, (ly, lx)), place['properties']['description'], coord_organization]
-                print(new_point)
-                if not new_point[1] is None:
-                    print('yes')
-                    self.lineEdit_searh.setText(new_point[1])
-                    self.searh(coord=new_point[2], color_pt='pm2am')
-                    self.lineEdit_searh.setText('')
+                res = get_organisation_json(f'{ly},{lx}', self.comboBox.currentText())
+                if not res is None:
+                    for answer in res:
+                        coord_organization = answer["geometry"]["coordinates"]
+                        if lonlat_distance(coord_organization, (ly, lx)) <= 50:
+                            self.lineEdit_searh.setText(answer['properties']['description'])
+                            self.searh(coord=coord_organization, color_pt='pm2am')
+                            self.lineEdit_searh.setText('')
+                            self.label_3.setText(f'Организация: {answer["properties"]["name"]}')
+                            break
+                    else:
+                        self.del_info_organization()
                 else:
                     self.del_info_organization()
-            else:
-                self.del_info_organization()
-
 
         self.show_text_adress()
         self.draw_map()
@@ -89,7 +88,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.points = set()
         self.adress = f'Нет организаций в радиусе 50 метров'
         self.post_index = ''
-
 
     def mousePressEvent(self, e):
         if e.button() == Qt.MouseButton.LeftButton:
@@ -143,6 +141,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         else:
             self.adress = 'ничего не найдено'
             self.post_index = 'отсутствует'
+        self.label_3.setText('')
         self.show_text_adress()
 
     def set_dark(self):
