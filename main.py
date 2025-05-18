@@ -109,9 +109,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 self.points.remove(result)
                 self.draw_map()
             self.post_index = self.adress = ''
+
         self.points = set()
         self.lineEdit_searh.setText('')
-        self.show_text_adress()
+        self.label_adress.setText('Адрес: ')
+        self.label_3.setText('')
         self.draw_map()
 
     def searh(self, coord=None, color_pt=''):
